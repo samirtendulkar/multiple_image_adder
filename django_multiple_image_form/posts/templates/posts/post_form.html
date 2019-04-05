@@ -1,0 +1,607 @@
+
+{% extends 'posts/post_base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block postcontent %}
+<head>
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" type="text/css"/>
+    <link href="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css" rel="stylesheet" type="text/css"/>
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'doka.min.css' %}" rel="stylesheet" type="text/css"/>
+    <style>
+    html {
+        font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+        font-size: 1em;
+    }
+
+    body {
+        padding: 2em;
+        max-width: 30em;
+    }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2> Add a new Recipe</h2>
+    <form action="" method="post" enctype="multipart/form-data" id="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <img alt="" id="preview" src="" width="100" />
+        <img alt="" id="new_image" src="" style="display: none;"  />
+        <!--<canvas id="main_canvas" width="100"></canvas>-->
+        {{formset.management_form}}
+          <h3 class="text-danger">You must be present in at least 1 image making the dish. With your face clearly visible and
+            matching your profile picture
+        </h3>
+        <h5>(Remember a picture is worth a thousand words) try to add as many prep images as possible
+            <span class="text-danger"><b>(Minimum 2)</b></span>.
+            People love to see how its made. Try not to add terms/language which only a few people understand.
+
+         Please add your own images. The ones you took while making the dish. Do not copy images</h5>
+        {% for f in formset %}
+            <div style="border-style: inset; padding:20px; display: none;" id="form{{forloop.counter}}" >
+                <p class="text-warning">Prep Image {{forloop.counter}}</p>
+                {% bootstrap_form f %}
+
+                <img alt="" src="" width="60" id="prep_image{{forloop.counter}}"  />
+            </div>
+        {% endfor %}
+
+        <br/><button type="button" id="add_more" onclick="myFunction()">Add more images</button>
+
+        <input type="submit" class="btn btn-primary" value="Post" style="float:right;"/>
+
+    </form>
+
+</div>
+<script>
+    [
+        {supported: 'Promise' in window, fill: 'https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js'},
+        {supported: 'fetch' in window, fill: 'https://cdn.jsdelivr.net/npm/fetch-polyfill@0.8.2/fetch.min.js'},
+        {supported: 'CustomEvent' in window && 'log10' in Math && 'sign' in Math &&  'assign' in Object &&  'from' in Array &&
+                    ['find', 'findIndex', 'includes'].reduce(function(previous, prop) { return (prop in Array.prototype) ? previous : false; }, true), fill: 'doka.polyfill.min.js'}
+    ].forEach(function(p) {
+        if (p.supported) return;
+        document.write('<script src="' + p.fill + '"><\/script>');
+    });
+    </script>
+
+    <script src="https://unpkg.com/filepond-plugin-image-edit"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-exif-orientation"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-crop"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-resize"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-transform"></script>
+    <script src="https://unpkg.com/filepond"></script>
+
+    <script src="{% static 'doka.min.js' %}"></script>
+
+    <script>
+
+    FilePond.registerPlugin(
+        FilePondPluginImageExifOrientation,
+        FilePondPluginImagePreview,
+        FilePondPluginImageCrop,
+        FilePondPluginImageResize,
+        FilePondPluginImageTransform,
+        FilePondPluginImageEdit
+    );
+
+    // PLEASE IGNORE THE CODE BELOW THATS JUST ME TRYING STUFF
+
+const csrftoken = $("[name=csrfmiddlewaretoken]").val();
+
+
+
+// FilePond.setOptions({
+//     server: {
+//         url: 'http://127.0.0.1:8000',
+//         process: {
+//             url: 'new_image/',
+//             method: 'POST',
+//             withCredentials: false,
+//             headers: {
+//                 headers:{
+//         "X-CSRFToken": csrftoken
+//             },
+//             timeout: 7000,
+//             onload: null,
+//             onerror: null,
+//             ondata: null
+//         }
+//     }
+// }});
+
+    FilePond.setOptions({
+        server: "new_image/",
+process: {headers:{
+        "X-CSRFToken": csrftoken
+    },
+
+
+
+    }});
+
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                }
+                // {
+                //     label: 'Portrait',
+                //     value: 1.25
+                // },
+                // {
+                //     label: 'Square',
+                //     value: 1
+                // },
+                // {
+                //     label: 'Landscape',
+                //     value: .75
+                // }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+    FilePond.create(document.querySelector('input[type="file"]'), {
+
+        // default crop aspect ratio
+        // imageCropAspectRatio: 1,
+
+        // resize to width of 200
+        // imageResizeTargetWidth: 200,
+        imageResizeTargetWidth: 1024,
+
+        // open editor on image drop
+        // imageEditInstantEdit: true,
+
+        // configure Doka
+        imageEditEditor: Doka.create({
+            cropAspectRatioOptions: [
+                {
+                    label: 'Free',
+                    value: null
+                },
+                {
+                    label: 'Portrait',
+                    value: 1.25
+                },
+                {
+                    label: 'Square',
+                    value: 1
+                },
+                {
+                    label: 'Landscape',
+                    value: .75
+                }
+            ]
+        })
+
+    });
+
+    </script>
+
+<script>
+    document.getElementById("form1").style.display = "block";
+    document.getElementById("form2").style.display = "block";
+    document.getElementById("form3").style.display = "block";
+
+    // let x = [...Array(1,13).keys()];
+
+    let x = 0;
+    let i = 4;
+    function myFunction() {
+
+          if( x < 13) {
+            x = i ++
+          }
+      document.getElementById("form"+x+"").style.display = "block";
+    }
+</script>
+</body>
+
+
+{% endblock %}
+

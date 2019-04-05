@@ -48,8 +48,3 @@ class Prep (models.Model): #(Images)
         return str(self.image_title) + " " + str(self.post.title)
 
 
-'''The below is just something I was trying. You do not have to follow this approach '''
-class ReducedImages(models.Model):
-    image = models.ImageField(upload_to='reduced_post_images/')
-    post = models.ForeignKey(Post, blank=True, null=True )
-    prep = models.ForeignKey(Prep, blank=True, null=True)

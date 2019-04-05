@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<div class="col-md-8">
+    <div class="infinite-container">
+        {% for post in post_list %}
+        <div class="infinite-item">
+            {% include "posts/_post.html" %}
+        </div>
+        {% empty %}
+
+            <div class="container-fluid">
+                <br/>
+                <br/>
+                <h3>No results found with the search query "{{ request.GET.q }}"</h3>
+            </div>
+
+        {% endfor %}
+    </div>
+    <div class="loading" style="display: none;">
+        Loading...
+    </div>
+
+    {% if page_obj.has_next %}
+        <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">More</a>
+    {% endif %}
+
+</div>
+
+
+
+
+{% endblock %}}
+
