@@ -12,8 +12,8 @@ class PostForm(forms.ModelForm):
         super(PostForm, self).__init__(*args, **kwargs)
         self.fields['post_image'].widget = forms.FileInput(attrs={
             'id': 'main_image'})
-        self.fields['post_image'].label = "Image of dish (An image of the actual dish made by you)"
-        self.fields['message'].label = "Recipe"
+        self.fields['post_image'].label = "Main Image (This will be your main image)"
+        self.fields['message'].label = "Details"
         self.fields['message'].widget.attrs['placeholder'] = "Recipe in detail"
 
     # widgets = {
@@ -30,8 +30,8 @@ class PostEditForm(forms.ModelForm):
         super(PostEditForm, self).__init__(*args, **kwargs)
         self.fields['post_image'].widget = forms.FileInput(attrs={
             'id': 'main_image'})
-        self.fields['post_image'].label = "Image of dish (An image of the actual dish made by you)"
-        self.fields['message'].label = "Recipe"
+        self.fields['post_image'].label = "Main Image (This will be your main image)"
+        self.fields['message'].label = "Details"
         self.fields['message'].widget.attrs['placeholder'] = "Recipe in detail"
 
 

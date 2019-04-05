@@ -25,7 +25,7 @@
 </head>
 <body>
 <div class="container">
-    <h2> Add a new Recipe</h2>
+    <h2> Add a new Post</h2>
     <form action="" method="post" enctype="multipart/form-data" id="form">
         {% csrf_token %}
         {% bootstrap_form form %}
@@ -33,14 +33,10 @@
         <img alt="" id="new_image" src="" style="display: none;"  />
         <!--<canvas id="main_canvas" width="100"></canvas>-->
         {{formset.management_form}}
-          <h3 class="text-danger">You must be present in at least 1 image making the dish. With your face clearly visible and
-            matching your profile picture
+
         </h3>
         <h5>(Remember a picture is worth a thousand words) try to add as many prep images as possible
-            <span class="text-danger"><b>(Minimum 2)</b></span>.
-            People love to see how its made. Try not to add terms/language which only a few people understand.
-
-         Please add your own images. The ones you took while making the dish. Do not copy images</h5>
+            <span class="text-danger"><b>(Minimum 2)</b></span>.</h5><br/>
         {% for f in formset %}
             <div style="border-style: inset; padding:20px; display: none;" id="form{{forloop.counter}}" >
                 <p class="text-warning">Prep Image {{forloop.counter}}</p>
