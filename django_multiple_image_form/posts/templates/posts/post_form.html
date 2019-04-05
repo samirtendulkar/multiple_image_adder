@@ -1,9 +1,9 @@
 
-{% extends 'posts/post_base.html' %}
+{% extends 'base.html' %}
 {% load bootstrap3 %}
 {% load staticfiles %}
 
-{% block postcontent %}
+{% block body %}
 <head>
 
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -116,14 +116,12 @@ const csrftoken = $("[name=csrfmiddlewaretoken]").val();
 // }});
 
     FilePond.setOptions({
-        server: "new_image/",
-process: {headers:{
-        "X-CSRFToken": csrftoken
-    },
+        server: "some_endpoint/",  //ADD SOME ENDPOINT URL. DOKA WILL SAVE IMAGE TO THIS ENDPOINT
+// process: {headers:{
+//         "X-CSRFToken": csrftoken
+//     }},
 
-
-
-    }});
+    });
 
     FilePond.create(document.querySelector('input[type="file"]'), {
 
