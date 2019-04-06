@@ -9,15 +9,17 @@ from django.forms import modelformset_factory
 from django.db import transaction
 from django.shortcuts import render
 
+
 User = get_user_model()
 
 
 '''This is the post create view'''
+@login_required
 def post_create(request):
     ImageFormSet = modelformset_factory(Prep, fields=('image', 'image_title', 'image_description'), extra=12, max_num=12,
                                         min_num=2)
     if request.method == "POST":
-        form = PostForm(request.POST or None)
+        form = PostForm(request.POST or None, request.FILES or None)
         formset = ImageFormSet(request.POST or None, request.FILES or None)
         if form.is_valid() and formset.is_valid():
             instance = form.save(commit=False)
@@ -43,7 +45,7 @@ def post_create(request):
 
 
 '''This is the post edit view'''
-class PostPrepUpdate(UpdateView):
+class PostPrepUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ('title', 'message', 'post_image', 'group')
     template_name = 'posts/post_edit.html'

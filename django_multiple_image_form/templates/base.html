@@ -29,13 +29,13 @@
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                       <ul class="nav navbar-nav">
-                          <li><a href="{% url 'all' %}">Home</a></li>
-                          <li><a href="{% url 'new' %}">New Post</a></li>
+                          <li><a href="{% url 'posts:all' %}">Home</a></li>
+                          <li><a href="{% url 'posts:new' %}">New Post</a></li>
                           <li><a href="">Extra</a></li>
 
 
                     </ul>
-                      <form class="navbar-form navbar-left" action="{% url 'all' %}">
+                      <form class="navbar-form navbar-left" action="{% url 'posts:all' %}">
                           <div class="form-group">
                               <input type="text" class="form-control" placeholder="Search" name="q">
                           </div>
@@ -45,27 +45,15 @@
             {% if request.user.is_anonymous  %}
                         <ul class="nav navbar-nav navbar-right">
 
-                          <li><a href="">Login</a></li>
-                          <li><a href="">Sign Up</a></li>
+                          <li><a href="{% url 'login' %}">Login</a></li>
                       </ul>
             {% else %}
                         <ul class="nav navbar-nav navbar-right">
-
-                    {% if request.user.profile.profile_image %}
-                            <li>
-                                <img src="" class="navbar-img" />
-                            </li>
-                    {% else %}
-                            <li>
-                                <img src="" class="navbar-img"/>
-                            </li>
-                    {% endif %}
                             <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Hi {{request.user.first_name|title}}
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Hi {{user.username|title}}
                             <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                              <li><a href="" title="User Profile">Your Profile</a></li>
-                              <li><a href="">Logout</a></li>
+                              <li><a href="{% url 'logout' %}">Logout</a></li>
                             </ul>
                             </li>
 

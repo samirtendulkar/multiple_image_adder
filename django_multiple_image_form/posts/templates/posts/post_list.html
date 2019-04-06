@@ -6,7 +6,16 @@
     <div class="infinite-container">
         {% for post in post_list %}
         <div class="infinite-item">
-            {% include "posts/_post.html" %}
+
+            <a href="{% url 'posts:single' username=post.user.username slug=post.slug %}">
+                <img class="img-responsive" src="{{post.post_image.url}}" alt="Image for {{post.title}}" width="460" height="345">
+            </a>
+            <div>
+                <a href="{% url 'posts:single' username=post.user.username slug=post.slug %}">
+                    <h2>{{ post.title }}</h2>
+                </a>
+            </div>
+            <hr/>
         </div>
         {% empty %}
 
@@ -18,13 +27,6 @@
 
         {% endfor %}
     </div>
-    <div class="loading" style="display: none;">
-        Loading...
-    </div>
-
-    {% if page_obj.has_next %}
-        <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">More</a>
-    {% endif %}
 
 </div>
 

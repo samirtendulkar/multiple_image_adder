@@ -15,14 +15,19 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from posts import views
+from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.Postlist.as_view(), name='all'),
-    url(r'^new/$', views.post_create, name='new')
+    url(r'^$', views.Homepage.as_view(), name='home'),
+    url(r'^posts/', include('posts.urls', namespace='posts')),
+    url(r'^login/$', LoginView.as_view(template_name='login.html'), name='login'),
+    url(r'^logout/$', LogoutView.as_view(), name='logout'),
+    url(r'^signup/$', views.signup, name='signup'),
+
 ]
 
 if settings.DEBUG:
