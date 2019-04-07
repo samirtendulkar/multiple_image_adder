@@ -11,9 +11,10 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=250, unique=True)
     slug = models.SlugField(allow_unicode=True, unique=True, max_length=500)
-    message = models.TextField()
-    message_html = models.TextField(editable=False)
-    post_image = models.ImageField()
+    message = models.TextField(blank=True, null=True)
+    message_html = models.TextField(editable=False, blank=True, null=True)
+    post_image = models.ImageField(blank=True, null=True)
+    is_draft = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
@@ -36,9 +37,10 @@ class Post(models.Model):
 class Prep (models.Model): #(Images)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_prep')
     image = models.ImageField(upload_to='images/', blank=True, null=True, default='')
-    image_title = models.CharField(max_length=100, default='')
-    image_description = models.CharField(max_length=250, default='')
-    sequence = models.SmallIntegerField(validators=[MaxValueValidator(12), MinValueValidator(1)])
+    image_title = models.CharField(max_length=100, blank=True, null=True)
+    image_description = models.CharField(max_length=250, blank=True, null=True)
+    sequence = models.SmallIntegerField(blank=True, null=True, validators=[MaxValueValidator(12),
+                                                                           MinValueValidator(1)])
 
     class Meta:
         unique_together = (('post', 'sequence'),)

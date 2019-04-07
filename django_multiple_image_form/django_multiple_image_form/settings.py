@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_multiple_image_form.context_processors.sections_processor',
             ],
         },
     },
@@ -127,5 +128,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-LOGIN_REDIRECT_URL = 'all'
-LOGOUT_REDIRECT_URL = 'all'
+LOGIN_REDIRECT_URL = 'posts:all'
+LOGOUT_REDIRECT_URL = 'posts:all'

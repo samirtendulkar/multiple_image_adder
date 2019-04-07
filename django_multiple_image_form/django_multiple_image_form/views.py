@@ -21,8 +21,11 @@ def signup(request):
 class Homepage(TemplateView):
     template_name = 'home.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(Homepage, self).get_context_data(**kwargs)
-        context['post_list'] = Post.objects.all()
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(Homepage, self).get_context_data(**kwargs)
+    #     context['post_list'] = Post.objects.all()
+    #     user = self.request.user
+    #     if user.is_authenticated:
+    #         context['is_draft'] = user.posts.filter(is_draft=True).count()
+    #     return context
 

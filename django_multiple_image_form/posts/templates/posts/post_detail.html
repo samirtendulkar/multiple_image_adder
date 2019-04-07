@@ -20,11 +20,11 @@
 
             <!-- Wrapper for slides -->
                 <div class="carousel-inner"> <!--style="height:100px; width:400px"--->
-
-                    <div class="item active">
-                        <img class="img-responsive" src="{{post.post_image.url}}" alt="Image for {{post.title}}" >
-                    </div>
-
+                    {% if post.post_image %}
+                        <div class="item active">
+                            <img class="img-responsive" src="{{post.post_image.url}}" alt="Image for {{post.title}}" >
+                        </div>
+                        {% endif %}
                     {% for prep in post.post_prep.all  %}
 
                     <div class="item">

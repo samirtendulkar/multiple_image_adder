@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block body %}
+
+<h2> Update/Edit your post</h2>
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {{prep.management_form}}
+    <h2 class="text-success">Extra Images</h2>
+
+    {% for f in prep.forms %}
+        <div style="border-style: inset; padding:20px;" >
+            <p class="text-warning">Prep Image {{forloop.counter}}</p>
+            {% bootstrap_form f %}
+        </div>
+    {% endfor %}
+
+    <input id="post_edit_submit" type="submit" class="btn btn-primary" style="float:right;" value="Update"/><br/><br/><br/>
+
+</form>
+
+
+
+
+
+{% endblock %}
+

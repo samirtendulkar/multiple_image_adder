@@ -6,16 +6,16 @@
     <div class="infinite-container">
         {% for post in post_list %}
         <div class="infinite-item">
-                <a href="{% url 'posts:single' username=post.user.username slug=post.slug %}">
-                    {% if post.post_image %}
+                {% if post.post_image %}
+                <a href="{% url 'posts:edit' slug=post.slug %}">
                     <img class="img-responsive" src="{{post.post_image.url}}" alt="Image for {{post.title}}" width="460" height="345">
-                    {% endif %}
                 </a>
-
+                {% endif %}
                 <div>
-                    <a href="{% url 'posts:single' username=post.user.username slug=post.slug %}">
+                    <a href="{% url 'posts:edit' slug=post.slug %}">
                         <h2>{{ post.title }}</h2>
                     </a>
+                    <a href="{% url 'posts:delete' slug=post.slug %}" class="text-danger">Delete Draft</a>
                 </div>
                 <hr/>
         </div>
@@ -24,7 +24,7 @@
             <div class="container-fluid">
                 <br/>
                 <br/>
-                <h3>No results found with the search query "{{ request.GET.q }}"</h3>
+                <h3>You do not have any drafts</h3>
             </div>
 
         {% endfor %}

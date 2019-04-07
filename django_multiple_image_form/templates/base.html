@@ -6,7 +6,6 @@
     <title>{% block title %}{{post.title}} {% endblock %}</title>
     <meta name="description" content="{% block metadescription %}{% endblock %}">
     {% load staticfiles %}
-    <link rel="shortcut icon" type="image/png" href=""/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -49,6 +48,9 @@
                       </ul>
             {% else %}
                         <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="{% url 'posts:drafts' %}">Drafts({{ is_draft }})</a>
+                            </li>
                             <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Hi {{user.username|title}}
                             <span class="caret"></span></a>
